@@ -2,11 +2,11 @@ package com.sundogsoftware.spark
 
 import org.apache.log4j._
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.types.{DoubleType, IntegerType, StructType}
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types.{DoubleType, IntegerType, StructType}
 
 /** Compute the total amount spent per customer in some fake e-commerce data. */
-object TotalSpentByCustomerDataset$TotalSpentByCustomerDataset {
+object TotalSpentByCustomerSortedDataset_David {
 
   case class CustomerOrders(cust_id: Int, item_id: Int, amount_spent: Double)
 
@@ -24,23 +24,14 @@ object TotalSpentByCustomerDataset$TotalSpentByCustomerDataset {
       .config("spark.sql.warehouse.dir", "file:///C:/temp") // Necessary to work around a Windows bug in Spark 2.0.0; omit if you're not on Windows.
       .getOrCreate()
 
-    val customerOrdersSchema = new StructType()
-      .add("cust_id", IntegerType, nullable = true)
-      .add("item_id", IntegerType, nullable = true)
-      .add("amount_spent", DoubleType, nullable = true)
+    // Create schema when reading customer-orders
+    val customerOrderSchema = new StructType().add("custId", IntegerType).add("itemId", IntegerType).add("totalSpent", IntegerType)
 
+
+    // Load up the data into spark dataset
+    // Use default separator (,), load schema from customerOrdersSchema and force case class to read it as dataset
     import spark.implicits._
-    val customerDS = spark.read
-      .schema(customerOrdersSchema)
-      .csv("data/customer-orders.csv")
-      .as[CustomerOrders]
-    
-    val totalByCustomer = customerDS
-      .groupBy("cust_id")
-      .agg(round(sum("amount_spent"), 2)
-        .alias("total_spent"))
-
-    totalByCustomer.show(totalByCustomer.count.toInt)
+    val customerDataSet = spark.read.schema(customerOrderSchema).csv("data/customer-orders.csv").as[CustomerOrders]
   }
 }
 
