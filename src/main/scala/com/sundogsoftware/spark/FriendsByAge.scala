@@ -6,11 +6,14 @@ import org.apache.log4j._
 /** Compute the average number of friends by age in a social network. */
 object FriendsByAge {
 
-  /** A function that splits a line of input into (age, numFriends) tuples. */
+  /** A function that splits a line of input into (age, numFriends) tuples.
+   *  You typically start off with a parseline function that clearly defines how you want your target file chopped up.
+   *  The map function basically always calls this function in order to do it's work.
+   *  * */
   def parseLine(line: String): (Int, Int) = {
       // Split by commas
       val fields = line.split(",")
-      // Extract the age and numFriends fields, and convert to integers
+      // Extract the age and numFriends fields, and convert to integers; remember to just take what you want
       val age = fields(2).toInt
       val numFriends = fields(3).toInt
       // Create a tuple that is our result.
