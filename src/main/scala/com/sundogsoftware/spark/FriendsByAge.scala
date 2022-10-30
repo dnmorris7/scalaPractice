@@ -42,9 +42,11 @@ object FriendsByAge {
     val preResults = rdd.mapValues(x => (x, 1))
     log.warn("Pre Reduced RESULTS\r"+ preResults.collect().sorted.foreach(println))
     // x._1+y._1 = how many friends exist for that age | x._2 + y._2 = how many people exist for that age
+    // In case what's below is confusing, you could rephrase it as:
+    // val totalsByAge = rdd.mapValues(x => (uniqueAge, 1)).reduceByKey( (friends,ageInstances) => (friends._1 + y._1, ageSet._2 + y._2))
     val totalsByAge = preResults.reduceByKey((x,y) => (x._1 + y._1, x._2 + y._2))
 
-//    val totalsByAge = rdd.mapValues(x => (uniqueAge, 1)).reduceByKey( (friends,ageInstances) => (friends._1 + y._1, ageSet._2 + y._2))
+
 
     // So now we have tuples of (age, (totalFriends, totalInstances))
     // To compute the average we divide totalFriends / totalInstances for each age.
@@ -52,7 +54,11 @@ object FriendsByAge {
     
     // Collect the results from the RDD (This kicks off computing the DAG and actually executes the job)
     val results = averagesByAge.collect()
-    
+
+
+    println("Preparing to Reduce in ten seconds. . .")
+    Thread.sleep(10000)
+
     // Sort and print the final results.
     results.sorted.foreach(println)
   }

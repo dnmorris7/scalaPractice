@@ -22,7 +22,7 @@ object MinTemperaturesSQL_David {
     val session = SparkSession.builder.appName("WordCount")
       .master("local[*]")
       .config("spark.sql.warehouse.dir", "local")
-      .getOrCreate(
+      .getOrCreate()
 
     import session.implicits._
 
