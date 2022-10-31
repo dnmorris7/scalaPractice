@@ -7,7 +7,18 @@ import scala.math.min
 
 
 object MinTemperatures_David {
-
+/*
+* Again, you create a parseLine function to define how you'll want your map function to chop things up.
+* This is your chance to define how you want things divided, and what exactly you'll be taking from the file.
+*
+* In this example, our 1800.csv looks something like this...
+* STATIONID, Date, [TMAX or TMIN for that day],,,,,
+* ITE00100554,18000101,TMAX,-75,,,E,
+* ITE00100554,18000101,TMIN,-148,,,E,
+*
+* We'll use parseLine to define precisely what we ant out of these tuples, and it'll serve as the kernel of our map
+* function.
+* */
   def parseLine(line: String): (String, String, Float) = {
     val fields = line.split(",")
     val stationID = fields(0)
