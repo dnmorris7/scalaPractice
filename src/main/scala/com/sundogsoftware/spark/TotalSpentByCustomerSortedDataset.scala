@@ -43,7 +43,7 @@ object TotalSpentByCustomerSortedDataset {
 
     val totalByCustomerSorted = totalByCustomer.sort("total_spent")
     
-    totalByCustomerSorted.show(totalByCustomer.count.toInt)
+    totalByCustomerSorted.show(15, totalByCustomer.count.toInt)
   }
   
 }
